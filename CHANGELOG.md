@@ -5,6 +5,29 @@ All notable changes to **local_branchupload** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] – 2026-06-08
+
+### Fixed
+- **Behat scenario “Smuggling another branch’s cohort via the cohorts
+  column is refused”** was not exercising the smuggle-detection code
+  path it was supposed to test. The production guard in
+  `process::validate_row()` rejects a non-admin’s attempt to assign a
+  branch cohort via the `Cohorts` column by looking up the cohort
+  `idnumber` in `process::load_branch_cohort_ids()`, which itself
+  builds its allowlist from the *distinct branch profile-field values
+  currently appearing in the user table*. The Behat Background only
+  created `manager1` (branch `GmndAchbrg`), so the foreign-branch
+  cohort `StWeingrtn` was never recognised as a branch cohort and the
+  row was silently allowed. Added a tiny carrier user
+  `weingrtn_carrier` (branch `StWeingrtn`, no role assignments,
+  unrelated email) to the Background so the smuggle-detection logic
+  has the data it needs. Mirrors the existing PHPUnit fixture
+  `process_test::test_cohorts_cannot_assign_branch_cohort` which uses
+  the same pattern with a `wangenuser` carrier.
+
+### Changed
+- `version.php` bumped to `2026060805` / release `1.4.2`.
+
 ## [1.4.1] – 2026-06-08
 
 ### Fixed

@@ -12,9 +12,19 @@ Feature: Branch enforcement — non-admins cannot escape their own branch
       | name           | idnumber   |
       | Gmnd Achbrg    | GmndAchbrg |
       | St Weingrtn    | StWeingrtn |
+    # `weingrtn_carrier` exists solely so the StWeingrtn cohort idnumber is
+    # registered as a *known branch value* — `process::load_branch_cohort_ids()`
+    # builds the smuggle-detection allowlist from the distinct branch
+    # profile-field values that currently appear in the user table. Without
+    # at least one user whose branch field equals "StWeingrtn", the smuggle
+    # check in scenario "Smuggling another branch's cohort …" would not
+    # fire. The matching PHPUnit fixture
+    # (process_test::test_cohorts_cannot_assign_branch_cohort) uses the
+    # same pattern with a "wangenuser" carrier user.
     And the following "users" exist:
-      | username | firstname | lastname | email             | profile_field_branchoffice |
-      | manager1 | Max       | Manager  | mgr1@example.com  | GmndAchbrg                 |
+      | username           | firstname | lastname | email                    | profile_field_branchoffice |
+      | manager1           | Max       | Manager  | mgr1@example.com         | GmndAchbrg                 |
+      | weingrtn_carrier   | Weingrtn  | Carrier  | weingrtn@example.com     | StWeingrtn                 |
     And the following "system role assigns" exist:
       | user     | role          |
       | manager1 | branchmanager |
