@@ -206,7 +206,7 @@ jobs:
 
       # ---------------------- Trivy (filesystem scan) ------------------------
       - name: Run Trivy filesystem scan (SARIF)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -226,7 +226,7 @@ jobs:
 
       - name: Trivy filesystem scan (job-log table)
         if: ${{ always() }}
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -249,12 +249,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP 8.3 with PHPDepend
+      - name: Setup PHP 8.3
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           coverage: none
-          tools: composer, pdepend
+          tools: composer
+          extensions: dom, xml, mbstring
+
+      - name: Install PHPDepend (via Composer)
+        run: |
+          # `shivammathur/setup-php`'s `tools: pdepend` option silently fails
+          # on Ubuntu 24.04 runners (PHAR mirror flakiness), so we install
+          # PHPDepend explicitly via Composer and expose its bin directory.
+          composer global require --no-interaction --no-progress pdepend/pdepend:^2.16
+          COMPOSER_BIN="$(composer global config bin-dir --absolute --quiet)"
+          echo "$COMPOSER_BIN" >> "$GITHUB_PATH"
+          "$COMPOSER_BIN/pdepend" --version
 
       - name: Run PHPDepend
         run: |

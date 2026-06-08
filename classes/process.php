@@ -284,7 +284,9 @@ class process {
      * headers work transparently.
      *
      * @param array $line The raw CSV line values.
-     * @param array<string,int|null> $colindex Canonical key => 0-based column index, or null.
+     * @param array $colindex Map of canonical key => 0-based column index
+     *                        (or null for columns that aren't present in the
+     *                        uploaded CSV header row).
      * @return array Parsed row with named keys.
      */
     private function parse_line(array $line, array $colindex): array {

@@ -126,7 +126,8 @@ final class column_config {
      * back to the configured value, which in turn falls back to the language
      * default for the configured site language.
      *
-     * @param array<string,string>|null $overrides Optional canonical-key => header map.
+     * @param array|null $overrides Optional map of canonical-key => header.
+     *                              Pass null (the default) to read from `get_config()`.
      */
     public function __construct(?array $overrides = null) {
         $this->headers = [];

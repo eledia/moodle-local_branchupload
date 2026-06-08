@@ -43,7 +43,7 @@ Feature: Configurable CSV column headers
   Scenario: A CSV using the renamed headers is accepted and processed
     Given I log in as "manager1"
     And I visit "/local/branchupload/index.php"
-    When I upload "local/branchupload/tests/fixtures/users_custom_columns.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_custom_columns.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     # The preview table's column titles are now the renamed headers.
@@ -64,7 +64,7 @@ Feature: Configurable CSV column headers
     Given I log in as "manager1"
     And I visit "/local/branchupload/index.php"
     # Upload the default-headed fixture — which now uses the wrong column names.
-    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     # The error message must surface the *configured* (renamed) headers so the
     # admin knows exactly which columns to add.

@@ -28,7 +28,7 @@ Feature: Form validation and error surfacing
 
   @javascript @_file_upload
   Scenario: Rows with an invalid e-mail are flagged Error and skipped
-    When I upload "local/branchupload/tests/fixtures/users_invalid_email.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_invalid_email.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     And I should see "Error" in the "not_an_email" "table_row"
@@ -39,7 +39,7 @@ Feature: Form validation and error surfacing
   @javascript @_file_upload
   Scenario: The per-upload row cap is enforced before any data is touched
     Given the branchupload maximum upload size is set to 2 rows
-    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     # The 3-row fixture exceeds the cap of 2.
     Then I should see "The CSV contains 3 rows, but the maximum is 2"

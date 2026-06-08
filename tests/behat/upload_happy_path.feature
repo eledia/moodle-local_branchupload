@@ -20,7 +20,7 @@ Feature: Happy path — upload, preview, confirm
     And I visit "/local/branchupload/index.php"
 
   Scenario: Branch manager uploads three new users and confirms
-    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     # We are now on the preview page (step 2).
     Then I should see "Upload preview"
@@ -41,14 +41,14 @@ Feature: Happy path — upload, preview, confirm
     And I should see "Created" in the "hans.beispiel@example.de" "table_row"
 
   Scenario: Preview shows a branch-locked banner for non-admin uploaders
-    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Your branch:"
     And I should see "GmndAchbrg"
     And I should not see "Admin mode"
 
   Scenario: Cancelling on the preview page does not create any users
-    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_branch_a.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     When I click on "Cancel" "link"

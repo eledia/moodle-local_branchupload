@@ -22,7 +22,7 @@ Feature: Removal handling — admin chooses suspend or delete
 
   Scenario: Remove=1 with default action suspends the user (reversible)
     # The "Suspend" action is the documented default.
-    When I upload "local/branchupload/tests/fixtures/users_delete.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_delete.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     And I should see "Will be suspended" in the "toremove@example.de" "table_row"
@@ -38,7 +38,7 @@ Feature: Removal handling — admin chooses suspend or delete
 
   Scenario: Remove=1 with delete action permanently removes the user
     Given the branchupload delete action is set to "delete"
-    When I upload "local/branchupload/tests/fixtures/users_delete.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_delete.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     And I should see "Will be deleted" in the "toremove@example.de" "table_row"

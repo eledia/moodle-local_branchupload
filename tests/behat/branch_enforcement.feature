@@ -22,7 +22,7 @@ Feature: Branch enforcement — non-admins cannot escape their own branch
   Scenario: Cross-branch rows are flagged as Error and skipped on confirm
     Given I log in as "manager1"
     And I visit "/local/branchupload/index.php"
-    When I upload "local/branchupload/tests/fixtures/users_cross_branch.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_cross_branch.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     # The own-branch row is fine.
@@ -44,7 +44,7 @@ Feature: Branch enforcement — non-admins cannot escape their own branch
   Scenario: Smuggling another branch's cohort via the cohorts column is refused
     Given I log in as "manager1"
     And I visit "/local/branchupload/index.php"
-    When I upload "local/branchupload/tests/fixtures/users_smuggle_cohort.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_smuggle_cohort.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     # The smuggling attempt is flagged Error with the explicit reason.
@@ -54,7 +54,7 @@ Feature: Branch enforcement — non-admins cannot escape their own branch
   Scenario: Admin bypass — admin may upload rows for any branch
     Given I log in as "admin"
     And I visit "/local/branchupload/index.php"
-    When I upload "local/branchupload/tests/fixtures/users_cross_branch.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_cross_branch.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     And I should see "Admin mode"
@@ -69,7 +69,7 @@ Feature: Branch enforcement — non-admins cannot escape their own branch
   Scenario: Admin bypass — admin may also smuggle cohorts via the cohorts column
     Given I log in as "admin"
     And I visit "/local/branchupload/index.php"
-    When I upload "local/branchupload/tests/fixtures/users_smuggle_cohort.csv" file to "CSV file" filepicker
+    When I upload "local/branchupload/tests/fixtures/users_smuggle_cohort.csv" file to "CSV file" filemanager
     And I press "Upload CSV"
     Then I should see "Upload preview"
     # Even though the cohorts column contains a branch-cohort idnumber, the

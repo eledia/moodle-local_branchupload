@@ -28,6 +28,46 @@
                 table column titles
     * backurl - string, URL to return to upload page
 
+    Example context (json):
+    {
+        "stats": {
+            "created": 1,
+            "updated": 1,
+            "suspended": 0,
+            "deleted": 0,
+            "skipped": 0,
+            "errors": 0
+        },
+        "headers": {
+            "email": "Email",
+            "branch": "Branch",
+            "orgunit": "OrgUnit",
+            "lastname": "LastName",
+            "firstname": "FirstName",
+            "remove": "Remove",
+            "cohorts": "Cohorts",
+            "oldemail": "OldEmail"
+        },
+        "rows": [
+            {
+                "rownumber": 1,
+                "email": "alice@example.org",
+                "branch": "Berlin",
+                "lastname": "Doe",
+                "firstname": "Alice",
+                "iscreated": true,
+                "isupdated": false,
+                "issuspended": false,
+                "isdeleted": false,
+                "isskipped": false,
+                "iserror": false,
+                "statusmessage": "User created",
+                "info": ""
+            }
+        ],
+        "backurl": "#"
+    }
+
     @package local_branchupload
     @author Christopher Reimann <christopher.reimann@eledia.de>
     @copyright 2026 eLeDia GmbH, Berlin https://eledia.de

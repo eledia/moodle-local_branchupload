@@ -34,6 +34,58 @@
     * delimiter_name - string, the CSV delimiter name
     * encoding - string, the CSV encoding
 
+    Example context (json):
+    {
+        "isadmin": false,
+        "uploaderbranch": "Berlin",
+        "summary": {
+            "total": 1,
+            "valid": 1,
+            "errors": 0,
+            "warnings": 0
+        },
+        "headers": {
+            "email": "Email",
+            "branch": "Branch",
+            "orgunit": "OrgUnit",
+            "lastname": "LastName",
+            "firstname": "FirstName",
+            "remove": "Remove",
+            "cohorts": "Cohorts",
+            "oldemail": "OldEmail"
+        },
+        "rows": [
+            {
+                "rownumber": 1,
+                "email": "alice@example.org",
+                "branch": "Berlin",
+                "orgunit": "HR",
+                "lastname": "Doe",
+                "firstname": "Alice",
+                "remove": "",
+                "cohorts": "",
+                "oldemail": "",
+                "haserrors": false,
+                "haswarnings": false,
+                "errors": [],
+                "warnings": [],
+                "action": true,
+                "actionlabel": "Create",
+                "iscreate": true,
+                "isupdate": false,
+                "issuspend": false,
+                "isdelete": false
+            }
+        ],
+        "formaction": "#",
+        "sesskey": "0123456789",
+        "iid": "0",
+        "delimiter_name": "comma",
+        "encoding": "UTF-8",
+        "hasvalidrows": true,
+        "cancelurl": "#"
+    }
+
     @package local_branchupload
     @author Christopher Reimann <christopher.reimann@eledia.de>
     @copyright 2026 eLeDia GmbH, Berlin https://eledia.de
