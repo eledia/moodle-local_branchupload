@@ -82,6 +82,7 @@ $string['result_error'] = 'Fehler';
 $string['result_skipped'] = 'Übersprungen';
 $string['result_suspended'] = 'Gesperrt';
 $string['result_updated'] = 'Aktualisiert';
+$string['result_warning'] = 'Warnung';
 $string['results_back'] = 'Weitere Datei hochladen';
 $string['results_created'] = 'Benutzer erstellt';
 $string['results_deleted'] = 'Benutzer gelöscht';

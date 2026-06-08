@@ -23,14 +23,13 @@ Feature: Capability and configuration gating for the branch upload page
 
   Scenario: A user without the upload capability cannot reach the page
     Given I log in as "nocap_user"
-    When I visit "/local/branchupload/index.php"
-    Then I should see "Sorry, but you do not currently have permissions to do that"
-    And I should not see "Upload branch users"
+    When I try to visit "/local/branchupload/index.php" expecting an access-denied page
+    Then I should not see "Upload branch users"
 
   Scenario: A guest is redirected to log in before reaching the upload page
     When I log in as "guest"
-    And I visit "/local/branchupload/index.php"
-    Then I should see "Sorry, but you do not currently have permissions to do that"
+    And I try to visit "/local/branchupload/index.php" expecting an access-denied page
+    Then I should not see "Upload branch users"
 
   Scenario: A branch manager without a branch profile value sees a clear error
     Given I log in as "mgr_nobranch"

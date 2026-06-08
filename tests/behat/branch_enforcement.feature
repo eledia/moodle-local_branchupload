@@ -37,7 +37,7 @@ Feature: Branch enforcement — non-admins cannot escape their own branch
     # Verify the foreign-branch user was not created in the database.
     Given I log out
     And I log in as "admin"
-    And I am on the "Users" page
+    And I visit "/admin/user.php"
     Then I should see "ownbranch@example.de"
     And I should not see "foreignbranch@example.de"
 

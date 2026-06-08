@@ -11,9 +11,9 @@ Feature: Removal handling — admin chooses suspend or delete
       | name        | idnumber   |
       | Gmnd Achbrg | GmndAchbrg |
     And the following "users" exist:
-      | username   | firstname | lastname | email                | profile_field_branchoffice |
-      | manager1   | Max       | Manager  | mgr1@example.com     | GmndAchbrg                 |
-      | toremove   | To        | Remove   | toremove@example.de  | GmndAchbrg                 |
+      | username             | firstname | lastname | email                | profile_field_branchoffice |
+      | manager1             | Max       | Manager  | mgr1@example.com     | GmndAchbrg                 |
+      | toremove@example.de  | To        | Remove   | toremove@example.de  | GmndAchbrg                 |
     And the following "system role assigns" exist:
       | user     | role          |
       | manager1 | branchmanager |
@@ -33,7 +33,7 @@ Feature: Removal handling — admin chooses suspend or delete
     # Verify the user still exists but is suspended.
     Given I log out
     And I log in as "admin"
-    When I am on the "Users" page
+    When I visit "/admin/user.php"
     Then I should see "toremove@example.de"
 
   Scenario: Remove=1 with delete action permanently removes the user

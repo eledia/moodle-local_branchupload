@@ -179,4 +179,65 @@ class behat_local_branchupload extends behat_base {
         }
         set_config('col_' . $key, $header, 'local_branchupload');
     }
+
+    /**
+     * Visit a URL that we expect to refuse access, and assert the standard
+     * Moodle "no permissions" message is rendered, without tripping Behat's
+     * stock {@see \behat_session_trait::look_for_exceptions()} AfterStep hook.
+     *
+     * Why this exists: {@see \require_capability()} throws
+     * {@see \required_capability_exception}, which Moodle's exception
+     * renderer turns into a full HTML page that includes
+     * `<div data-rel='fatalerror'>`. Behat's AfterStep hook reads that
+     * marker and fails the scenario — even though the denial *is* the
+     * thing under test. This step performs the visit and the assertion
+     * itself, then navigates to the site homepage so the AfterStep hook
+     * runs on a clean DOM.
+     *
+     * Usage in a feature file:
+     *
+     *     When I try to visit "/local/branchupload/index.php" expecting an access-denied page
+     *
+     * @When /^I try to visit "(?P<url_string>(?:[^"]|\\")*)" expecting an access-denied page$/
+     * @param string $url Local URL relative to the behat wwwroot.
+     */
+    public function i_try_to_visit_expecting_an_access_denied_page(string $url): void {
+        $session = $this->getSession();
+
+        // Visit the protected URL directly. The server-side capability check
+        // fires, the exception renderer emits the standard denial page, and
+        // the browser receives that HTML. No PHP exception bubbles up into
+        // our context.
+        $session->visit($this->locate_path($url));
+
+        // Grab the rendered HTML and look for any of the well-known markers
+        // Moodle uses for a capability-denied page. We accept either the
+        // English-language phrase ("Sorry, but you do not currently …") or
+        // the structural marker ('nopermissions' / 'errormessage') so the
+        // assertion is robust across language packs and theme variations.
+        $content = $session->getPage()->getContent();
+        $expected = [
+            'Sorry, but you do not currently have permissions',
+            'nopermissions',
+            'Access denied',
+        ];
+        $matched = false;
+        foreach ($expected as $needle) {
+            if (stripos($content, $needle) !== false) {
+                $matched = true;
+                break;
+            }
+        }
+        if (!$matched) {
+            throw new \Behat\Mink\Exception\ExpectationException(
+                'Expected an access-denied page after visiting "' . $url
+                . '", but none of the expected markers were present in the response.',
+                $session
+            );
+        }
+
+        // Navigate to a safe page so the AfterStep look_for_exceptions hook
+        // does not flag the (intentional) error page we just inspected.
+        $session->visit($this->locate_path('/'));
+    }
 }

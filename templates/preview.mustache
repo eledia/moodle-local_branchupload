@@ -197,12 +197,14 @@
                         {{#haserrors}}
                             <span class="badge bg-danger">
                                 <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                {{#str}}result_error, local_branchupload{{/str}}:
                                 {{#errors}}{{message}} {{/errors}}
                             </span>
                         {{/haserrors}}
                         {{#haswarnings}}
                             <span class="badge bg-warning text-dark">
                                 <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                {{#str}}result_warning, local_branchupload{{/str}}:
                                 {{#warnings}}{{message}} {{/warnings}}
                             </span>
                         {{/haswarnings}}

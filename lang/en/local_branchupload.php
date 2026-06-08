@@ -82,6 +82,7 @@ $string['result_error'] = 'Error';
 $string['result_skipped'] = 'Skipped';
 $string['result_suspended'] = 'Suspended';
 $string['result_updated'] = 'Updated';
+$string['result_warning'] = 'Warning';
 $string['results_back'] = 'Upload another file';
 $string['results_created'] = 'Users created';
 $string['results_deleted'] = 'Users deleted';

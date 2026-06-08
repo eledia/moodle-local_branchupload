@@ -57,6 +57,6 @@ Feature: Happy path — upload, preview, confirm
     # And no user records should have been created — verifiable via the admin user list.
     Given I log out
     And I log in as "admin"
-    When I am on the "Users" page
+    When I visit "/admin/user.php"
     Then I should not see "max.muster@example.de"
     And I should not see "erika.neu@example.de"

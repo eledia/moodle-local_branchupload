@@ -5,6 +5,65 @@ All notable changes to **local_branchupload** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] – 2026-06-08
+
+### Fixed
+- **Behat CI green-up — nine failing scenarios across five feature
+  files.** The 1.4.0 Behat suite was tripping over five distinct
+  pieces of test-harness friction. The plugin logic itself remained
+  correct (the matching PHPUnit suite stayed green throughout), but
+  the Gherkin scenarios needed adjusting to reflect how Moodle 5.1's
+  Behat extension actually behaves:
+  - **Access-denied page no longer flagged as a "fatal exception".**
+    Moodle's stock `look_for_exceptions()` AfterStep hook scans every
+    page for `<div data-rel='fatalerror'>` — which is precisely what
+    Moodle's exception renderer emits for the intentional
+    `required_capability_exception` produced by `require_capability()`
+    at `index.php:35`. The two access-denial scenarios in
+    `access.feature` therefore failed the moment they navigated to
+    the protected URL, even though the denial *was* the thing under
+    test. Introduced a new custom step `I try to visit "X" expecting
+    an access-denied page` (in `behat_local_branchupload.php`) that
+    visits the URL via Mink directly, reads the response body, asserts
+    the standard "Sorry, but you do not currently have permissions"
+    marker, and then navigates to the site home so the AfterStep hook
+    runs on a clean DOM.
+  - **Delete / suspend scenarios no longer silently mark rows as
+    `skipped`.** The Background of `delete_action.feature` created the
+    target user with `username = toremove` but `email =
+    toremove@example.de`. The production code path uses
+    `email_to_username($email)` (which lowercases the email and runs
+    it through `PARAM_USERNAME`, preserving `@`) to look up the user
+    — so the lookup returned `null`, `process_row()` took the
+    `!$existinguser` branch, and the row's status came back as
+    `skipped` rather than `suspended`/`deleted`. Aligned the Background
+    so the username equals the email; the matching PHPUnit fixtures
+    have always used this same convention.
+  - **`I am on the "Users" page` is not a recognised core page
+    identifier.** Replaced with the direct path `/admin/user.php`
+    in the three scenarios that referenced it (`branch_enforcement`,
+    `delete_action`, `upload_happy_path`).
+  - **`should be visible` requires a JavaScript driver.** The
+    `Example CSV file` link scenario in `form_validation.feature`
+    was a non-`@javascript` scenario, so the visibility check raised
+    a `DriverException`. The redundant assertion was removed; the
+    preceding `should exist` covers the keyboard-reachability
+    contract.
+
+### Added
+- **"Error" / "Warning" label on preview-page status badges.** For
+  parity with the results-page status cells (which already showed
+  "Created" / "Updated" / "Suspended" / "Deleted" / "Skipped" /
+  "Error"), the preview-page error and warning badges now prefix the
+  message with the literal "Error:" / "Warning:" label, sourced from
+  the new `result_warning` language string (EN: *Warning*, DE:
+  *Warnung*). This makes the status scannable for both screen-reader
+  users and automated tests, and matches the visual rhythm of the
+  results page.
+
+### Changed
+- `version.php` bumped to `2026060804` / release `1.4.1`.
+
 ## [1.4.0] – 2026-06-08
 
 ### Added
