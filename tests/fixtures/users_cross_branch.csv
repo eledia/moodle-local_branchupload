@@ -1,0 +1,3 @@
+Email;Branch;OrgUnit;LastName;FirstName;Remove;Cohorts;OldEmail
+ownbranch@example.de;GmndAchbrg;Bauverwaltung;OwnUser;Test;;;
+foreignbranch@example.de;StWeingrtn;Finanzen;ForeignUser;Test;;;

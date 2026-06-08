@@ -1,0 +1,205 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_branchupload/preview
+
+    Preview of CSV upload before processing.
+
+    Context variables required for this template:
+    * isadmin - boolean, whether the user is a site admin
+    * uploaderbranch - string, the uploader's branch value (non-admin)
+    * summary - object with total, valid, errors, warnings counts
+    * rows - array of row objects with rownumber, email, branch, orgunit, lastname, firstname,
+             remove, cohorts, action, errors, warnings, haserrors, haswarnings
+    * headers - object with email, branch, orgunit, lastname, firstname, remove,
+                cohorts, oldemail — the configured CSV column headers, used as
+                table column titles so they match the uploaded file verbatim
+    * formaction - string, the form action URL
+    * sesskey - string, the session key
+    * iid - string, the CSV import reader ID
+    * delimiter_name - string, the CSV delimiter name
+    * encoding - string, the CSV encoding
+
+    @package local_branchupload
+    @author Christopher Reimann <christopher.reimann@eledia.de>
+    @copyright 2026 eLeDia GmbH, Berlin https://eledia.de
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+<div class="local-branchupload-preview">
+
+    <h2 class="visually-hidden">{{#str}}preview_title, local_branchupload{{/str}}</h2>
+
+    {{! Step indicator — semantic ordered list with aria-current on the active step. }}
+    <ol class="local-branchupload-steps list-unstyled d-flex justify-content-center align-items-center gap-2 mb-4"
+        aria-label="{{#str}}step_indicator_label, local_branchupload{{/str}}">
+        <li>
+            <span class="badge bg-success rounded-pill px-3 py-2">
+                <span class="visually-hidden">{{#str}}step_completed, local_branchupload{{/str}}: </span>
+                1 {{#str}}uploadstep, local_branchupload{{/str}}
+            </span>
+        </li>
+        <li aria-hidden="true" class="text-muted">&rarr;</li>
+        <li aria-current="step">
+            <span class="badge bg-primary rounded-pill px-3 py-2">
+                <span class="visually-hidden">{{#str}}step_current, local_branchupload{{/str}}: </span>
+                2 {{#str}}previewstep, local_branchupload{{/str}}
+            </span>
+        </li>
+        <li aria-hidden="true" class="text-muted">&rarr;</li>
+        <li>
+            <span class="badge bg-secondary rounded-pill px-3 py-2">
+                <span class="visually-hidden">{{#str}}step_upcoming, local_branchupload{{/str}}: </span>
+                3 {{#str}}resultstep, local_branchupload{{/str}}
+            </span>
+        </li>
+    </ol>
+
+    {{! Branch info banner — static page-load context, not a live region. }}
+    {{#isadmin}}
+        <div class="alert alert-info d-flex align-items-center">
+            <i class="fa fa-shield me-2" aria-hidden="true"></i>
+            <span>{{#str}}preview_admin_mode, local_branchupload{{/str}}</span>
+        </div>
+    {{/isadmin}}
+    {{^isadmin}}
+        <div class="alert alert-warning d-flex align-items-center">
+            <i class="fa fa-lock me-2" aria-hidden="true"></i>
+            <span>{{#str}}preview_branch_locked, local_branchupload, {{uploaderbranch}}{{/str}}</span>
+        </div>
+    {{/isadmin}}
+
+    {{! Summary cards }}
+    <div class="d-flex flex-wrap gap-3 mb-4">
+        <div class="card flex-fill text-center">
+            <div class="card-body py-2">
+                <div class="h4 mb-0">{{summary.total}}</div>
+                <small class="text-muted">{{#str}}summary_total, local_branchupload{{/str}}</small>
+            </div>
+        </div>
+        <div class="card flex-fill text-center border-success">
+            <div class="card-body py-2">
+                <div class="h4 mb-0 text-success">{{summary.valid}}</div>
+                <small class="text-muted">{{#str}}status_ok, local_branchupload{{/str}}</small>
+            </div>
+        </div>
+        <div class="card flex-fill text-center border-danger">
+            <div class="card-body py-2">
+                <div class="h4 mb-0 text-danger">{{summary.errors}}</div>
+                <small class="text-muted">{{#str}}results_errors, local_branchupload{{/str}}</small>
+            </div>
+        </div>
+        <div class="card flex-fill text-center border-warning">
+            <div class="card-body py-2">
+                <div class="h4 mb-0 text-warning">{{summary.warnings}}</div>
+                <small class="text-muted">{{#str}}summary_warnings, local_branchupload{{/str}}</small>
+            </div>
+        </div>
+    </div>
+
+    {{! Preview table }}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover generaltable">
+            <caption class="visually-hidden">{{#str}}preview_title, local_branchupload{{/str}}</caption>
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col" aria-label="{{#str}}header_rownumber, local_branchupload{{/str}}">#</th>
+                    <th scope="col">{{headers.email}}</th>
+                    <th scope="col">{{headers.branch}}</th>
+                    <th scope="col">{{headers.orgunit}}</th>
+                    <th scope="col">{{headers.lastname}}</th>
+                    <th scope="col">{{headers.firstname}}</th>
+                    <th scope="col">{{headers.remove}}</th>
+                    <th scope="col">{{headers.cohorts}}</th>
+                    <th scope="col">{{headers.oldemail}}</th>
+                    <th scope="col">{{#str}}header_status, local_branchupload{{/str}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#rows}}
+                <tr class="{{#haserrors}}table-danger{{/haserrors}}{{#haswarnings}}table-warning{{/haswarnings}}">
+                    <th scope="row" class="fw-normal">{{rownumber}}</th>
+                    <td>{{email}}</td>
+                    <td>{{branch}}</td>
+                    <td>{{orgunit}}</td>
+                    <td>{{lastname}}</td>
+                    <td>{{firstname}}</td>
+                    <td>{{remove}}</td>
+                    <td>{{cohorts}}</td>
+                    <td>{{oldemail}}</td>
+                    <td>
+                        {{#haserrors}}
+                            <span class="badge bg-danger">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                {{#errors}}{{message}} {{/errors}}
+                            </span>
+                        {{/haserrors}}
+                        {{#haswarnings}}
+                            <span class="badge bg-warning text-dark">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                {{#warnings}}{{message}} {{/warnings}}
+                            </span>
+                        {{/haswarnings}}
+                        {{^haserrors}}
+                        {{^haswarnings}}
+                            {{#action}}
+                            <span class="badge
+                                {{#iscreate}}bg-success{{/iscreate}}
+                                {{#isupdate}}bg-info text-dark{{/isupdate}}
+                                {{#issuspend}}bg-warning text-dark{{/issuspend}}
+                                {{#isdelete}}bg-danger{{/isdelete}}
+                            ">
+                                {{actionlabel}}
+                            </span>
+                            {{/action}}
+                        {{/haswarnings}}
+                        {{/haserrors}}
+                    </td>
+                </tr>
+                {{/rows}}
+            </tbody>
+        </table>
+    </div>
+
+    {{! Confirm / Cancel buttons }}
+    {{#hasvalidrows}}
+    <form method="post" action="{{formaction}}">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <input type="hidden" name="iid" value="{{iid}}">
+        <input type="hidden" name="delimiter_name" value="{{delimiter_name}}">
+        <input type="hidden" name="encoding" value="{{encoding}}">
+        <input type="hidden" name="step" value="process">
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <a href="{{cancelurl}}" class="btn btn-secondary">
+                {{#str}}preview_cancel, local_branchupload{{/str}}
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-check me-1" aria-hidden="true"></i>
+                {{#str}}preview_confirm, local_branchupload{{/str}}
+            </button>
+        </div>
+    </form>
+    {{/hasvalidrows}}
+    {{^hasvalidrows}}
+    <div class="d-flex justify-content-end mt-3">
+        <a href="{{cancelurl}}" class="btn btn-secondary">
+            {{#str}}preview_cancel, local_branchupload{{/str}}
+        </a>
+    </div>
+    {{/hasvalidrows}}
+
+</div>

@@ -1,0 +1,346 @@
+/*
+ * eLeDia corporate-identity stylesheet for branchupload user-manual PDFs.
+ *
+ * Targets WeasyPrint (CSS-paged-media); the same file is shared by the
+ * German Benutzerhandbuch.pdf and the English UserManual.pdf builds.
+ *
+ * Palette (sourced from https://eledia.de):
+ *   --eledia-navy        #003366  primary brand
+ *   --eledia-accent      #0066b3  links / secondary highlights
+ *   --eledia-light       #f3f4f6  block backgrounds
+ *   --eledia-text        #1f2937  body text
+ *   --eledia-muted       #6b7280  captions / footer
+ *   --eledia-success     #00834a  green badges
+ *   --eledia-warning     #f59e0b  amber callouts
+ *   --eledia-danger      #cf2e2e  red badges
+ */
+
+@page {
+    size: A4;
+    margin: 22mm 18mm 22mm 18mm;
+
+    @top-left {
+        content: string(doctitle);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 8.5pt;
+        color: #6b7280;
+    }
+    @top-right {
+        content: "eLeDia GmbH · local_branchupload";
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 8.5pt;
+        color: #6b7280;
+    }
+    @bottom-left {
+        content: "© 2026 eLeDia GmbH, Berlin · eledia.de";
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 8.5pt;
+        color: #6b7280;
+    }
+    @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 8.5pt;
+        color: #6b7280;
+    }
+}
+
+/* The first page (cover) has no headers/footers and no top margin. */
+@page :first {
+    margin: 0;
+    @top-left  { content: none; }
+    @top-right { content: none; }
+    @bottom-left  { content: none; }
+    @bottom-right { content: none; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Cover page                                                          */
+/* ------------------------------------------------------------------ */
+.cover {
+    page: cover;
+    page-break-after: always;
+    width: 100%;
+    height: 297mm;
+    box-sizing: border-box;
+    background:
+        linear-gradient(135deg, #003366 0%, #0066b3 100%);
+    color: #ffffff;
+    padding: 60mm 22mm 22mm 22mm;
+    position: relative;
+}
+
+.cover .brand {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 16pt;
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+}
+
+.cover .brand .accent {
+    color: #f59e0b;
+}
+
+.cover h1 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 32pt;
+    line-height: 1.15;
+    font-weight: 700;
+    margin: 18mm 0 6mm 0;
+    color: #ffffff;
+    border: none;
+    padding: 0;
+}
+
+.cover .subtitle {
+    font-size: 15pt;
+    font-weight: 300;
+    color: #e5e7eb;
+    margin-bottom: 28mm;
+    line-height: 1.4;
+}
+
+.cover .meta {
+    position: absolute;
+    bottom: 22mm;
+    left: 22mm;
+    right: 22mm;
+    border-top: 1px solid rgba(255,255,255,0.35);
+    padding-top: 6mm;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 9pt;
+    line-height: 1.5;
+    color: #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cover .meta .left  { text-align: left;  }
+.cover .meta .right { text-align: right; }
+
+/* ------------------------------------------------------------------ */
+/* Document body                                                       */
+/* ------------------------------------------------------------------ */
+html {
+    font-size: 10.5pt;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1f2937;
+    line-height: 1.55;
+    hyphens: auto;
+    /* stylelint-disable-next-line property-no-unknown */
+    string-set: doctitle "";
+}
+
+/* Pandoc wraps the title block. Use the H1 immediately after the cover
+   to set the running header. */
+h1.toc-title,
+nav#TOC > h1,
+nav#TOC > h2 {
+    color: #003366;
+    border-bottom: 1.5pt solid #003366;
+    padding-bottom: 4pt;
+    margin-top: 0;
+}
+
+nav#TOC ul {
+    list-style: none;
+    padding-left: 0;
+}
+nav#TOC ul ul {
+    padding-left: 6mm;
+}
+nav#TOC li {
+    margin: 1pt 0;
+}
+nav#TOC a {
+    color: #1f2937;
+    text-decoration: none;
+}
+nav#TOC a:hover {
+    color: #0066b3;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #003366;
+    page-break-after: avoid;
+    line-height: 1.25;
+}
+
+h1 {
+    font-size: 22pt;
+    margin: 0 0 6mm 0;
+    padding-bottom: 4pt;
+    border-bottom: 1.5pt solid #003366;
+    /* stylelint-disable-next-line property-no-unknown */
+    string-set: doctitle content();
+    page-break-before: always;
+}
+
+/* The very first H1 (right after the cover) should not force an extra page. */
+.cover + h1,
+nav#TOC + h1,
+.toc + h1 {
+    page-break-before: avoid;
+}
+
+h2 {
+    font-size: 15pt;
+    margin: 9mm 0 3mm 0;
+    color: #003366;
+}
+
+h3 {
+    font-size: 12.5pt;
+    margin: 6mm 0 2mm 0;
+    color: #0066b3;
+}
+
+h4 {
+    font-size: 11pt;
+    margin: 4mm 0 2mm 0;
+    color: #0066b3;
+    font-weight: 600;
+}
+
+p {
+    margin: 0 0 3mm 0;
+    text-align: justify;
+}
+
+a {
+    color: #0066b3;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------ */
+/* Lists                                                               */
+/* ------------------------------------------------------------------ */
+ul, ol {
+    margin: 0 0 3mm 0;
+    padding-left: 6mm;
+}
+li { margin: 0.5mm 0; }
+li > p { margin: 0; }
+
+/* ------------------------------------------------------------------ */
+/* Tables                                                              */
+/* ------------------------------------------------------------------ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 3mm 0 5mm 0;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+}
+
+th {
+    background-color: #003366;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: left;
+    padding: 2mm 3mm;
+    border: 0.4pt solid #003366;
+}
+
+td {
+    padding: 2mm 3mm;
+    border: 0.4pt solid #d1d5db;
+    vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+/* ------------------------------------------------------------------ */
+/* Code                                                                */
+/* ------------------------------------------------------------------ */
+code, pre {
+    font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 9pt;
+}
+
+code {
+    background-color: #f3f4f6;
+    color: #003366;
+    padding: 0.5pt 3pt;
+    border-radius: 2pt;
+}
+
+pre {
+    background-color: #f3f4f6;
+    border-left: 3pt solid #003366;
+    padding: 3mm 4mm;
+    margin: 3mm 0 5mm 0;
+    line-height: 1.4;
+    page-break-inside: avoid;
+    overflow-wrap: anywhere;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: #1f2937;
+}
+
+/* ------------------------------------------------------------------ */
+/* Blockquotes / call-outs                                             */
+/* ------------------------------------------------------------------ */
+blockquote {
+    margin: 3mm 0 5mm 0;
+    padding: 3mm 4mm;
+    background-color: #eff6ff;
+    border-left: 3pt solid #0066b3;
+    color: #1f2937;
+    page-break-inside: avoid;
+}
+
+blockquote p {
+    margin: 0;
+}
+
+blockquote p + p {
+    margin-top: 2mm;
+}
+
+/* ------------------------------------------------------------------ */
+/* Horizontal rule                                                     */
+/* ------------------------------------------------------------------ */
+hr {
+    border: none;
+    border-top: 0.6pt solid #d1d5db;
+    margin: 8mm 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Status emoji rendering — keep coloured circles in copy at full size */
+/* ------------------------------------------------------------------ */
+li code, td code {
+    white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ */
+/* Page-break helpers                                                  */
+/* ------------------------------------------------------------------ */
+.page-break {
+    page-break-before: always;
+}
+
+img {
+    max-width: 100%;
+    page-break-inside: avoid;
+}
+
+/* ------------------------------------------------------------------ */
+/* Strong, em                                                          */
+/* ------------------------------------------------------------------ */
+strong { color: #003366; font-weight: 600; }
+em     { color: inherit; font-style: italic; }

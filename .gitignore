@@ -1,0 +1,46 @@
+# PHP / Composer
+/vendor/
+composer.lock
+.phpunit.result.cache
+.phpunit.cache/
+*.phar
+
+# Node / front-end tooling
+/node_modules/
+/.npm/
+package-lock.json
+.parcel-cache/
+
+# Moodle / moodle-plugin-ci scratch
+/ci/
+/moodle/
+/moodledata/
+phpunit.xml
+/behat-*.log
+/Behat-*.log
+/Backup-*.log
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local config overrides
+/local.env
+.env
+.env.*
+!.env.example
+
+# Coverage / static analysis
+/coverage/
+/.phpstan-cache/
+/.psalm-cache/

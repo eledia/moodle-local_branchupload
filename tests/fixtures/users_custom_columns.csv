@@ -1,0 +1,3 @@
+EmailAddress;Site;Department;Surname;GivenName;Delete;ExtraCohorts;PreviousEmail
+custom1@example.de;GmndAchbrg;Bauverwaltung;Doe;Jane;;;
+custom2@example.de;GmndAchbrg;Finanzen;Smith;John;;TrainingA;
