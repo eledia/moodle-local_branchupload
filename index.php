@@ -95,8 +95,10 @@ if ($step === 'upload') {
     // Step indicator — semantic <ol> with aria-current on the active step (mirrors the
     // structure in preview.mustache and results.mustache for WCAG 2.2 AA compliance).
     $stepitems = [
-        \html_writer::tag('li',
-            \html_writer::tag('span',
+        \html_writer::tag(
+            'li',
+            \html_writer::tag(
+                'span',
                 \html_writer::span(
                     get_string('step_current', 'local_branchupload') . ': ',
                     'visually-hidden'
@@ -106,8 +108,10 @@ if ($step === 'upload') {
             ['aria-current' => 'step']
         ),
         \html_writer::tag('li', '&rarr;', ['aria-hidden' => 'true', 'class' => 'text-muted']),
-        \html_writer::tag('li',
-            \html_writer::tag('span',
+        \html_writer::tag(
+            'li',
+            \html_writer::tag(
+                'span',
                 \html_writer::span(
                     get_string('step_upcoming', 'local_branchupload') . ': ',
                     'visually-hidden'
@@ -116,8 +120,10 @@ if ($step === 'upload') {
             )
         ),
         \html_writer::tag('li', '&rarr;', ['aria-hidden' => 'true', 'class' => 'text-muted']),
-        \html_writer::tag('li',
-            \html_writer::tag('span',
+        \html_writer::tag(
+            'li',
+            \html_writer::tag(
+                'span',
                 \html_writer::span(
                     get_string('step_upcoming', 'local_branchupload') . ': ',
                     'visually-hidden'

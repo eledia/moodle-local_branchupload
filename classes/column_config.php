@@ -31,8 +31,6 @@
 
 namespace local_branchupload;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Resolves the configured CSV column header for each canonical field.
  *

@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Run upgrade steps for local_branchupload.
  *
@@ -46,7 +44,7 @@ function xmldb_local_branchupload_upgrade(int $oldversion): bool {
             'col_loeschen'    => 'col_remove',
             'col_kohorten'    => 'col_cohorts',
             'col_alte_email'  => 'col_oldemail',
-            // col_email kept its name; no migration needed.
+            // The col_email key kept its name; no migration needed.
         ];
 
         foreach ($renames as $oldname => $newname) {

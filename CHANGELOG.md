@@ -5,6 +5,75 @@ All notable changes to **local_branchupload** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.3] – 2026-06-08
+
+### Fixed
+- **`moodle-plugin-ci mustache` job failing** with `ERROR: Mustache
+  syntax exception: Example context JSON is unparsable, fails with:
+  Syntax error` on both `templates/preview.mustache` and
+  `templates/results.mustache`. Root cause: `mustache_lint.php`'s
+  example-context extractor finds `@template`, slices to the closing
+  `}}` and then runs a *greedy* regex
+  `/Example context \(json\):([\s\S]*)/` with no terminator — so
+  *anything* placed after the JSON closing `}` inside the same
+  `{{!…}}` comment block gets appended to the JSON. The 1.4.0
+  templates put the `@package` / `@author` / `@copyright` /
+  `@license` tags **after** the example JSON, which made the extractor
+  glue those tag lines onto the JSON text. Moved those four
+  metadata tags above the `Example context (json):` block in both
+  templates so the JSON is the last content in the docblock.
+- **`moodle-plugin-ci codechecker --max-warnings 0` job failing** with
+  166+ errors and warnings across eight files. The job now passes
+  again after the following cleanups:
+  - `tests/process_test.php`: moved the `@covers` annotation from the
+    file-level docblock to the **class-level** docblock so
+    `moodle.PHPUnit.TestCaseCovers` actually sees it (the sniff only
+    scans the class docblock, not the file docblock). Added a second
+    `@covers \local_branchupload\column_config` to accurately
+    document the new column-config tests. Silences 33
+    `TestCaseCovers.Missing` warnings in one shot.
+  - `tests/process_test.php`: collapsed ~100 column-aligned
+    `assertSame()` / `set_config()` argument commas to single-space
+    style required by `Universal.WhiteSpace.CommaSpacing` and
+    `Generic.Functions.FunctionCallArgumentSpacing`.
+  - `tests/process_test.php`: replaced backticks around `lang/de`
+    path references with single quotes
+    (`moodle.Strings.ForbiddenStrings`).
+  - `tests/process_test.php`: capitalised the inline comment
+    `// validate_columns must accept…` →
+    `// The validate_columns() call must accept…`
+    (`moodle.Commenting.InlineComment.NotCapital`).
+  - `tests/process_test.php`: replaced the decorative
+    `// --------` divider comment block with a self-contained
+    paragraph ending in a full stop
+    (`moodle.Commenting.InlineComment.InvalidEndChar`).
+  - `index.php`: reformatted six nested `\html_writer::tag(...)`
+    calls so the opening parenthesis is the last content on its line
+    (`PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket`).
+  - `download_example.php`: converted three column-aligned fixture
+    rows to one-element-per-line array literals to fix 17
+    comma-spacing errors and three
+    `moodle.Files.LineLength.TooLong` warnings.
+  - `tests/behat/behat_local_branchupload.php`: removed the blank
+    line after the class-opening brace
+    (`PSR12.Classes.OpeningBraceSpace.Found`) and collapsed the five
+    aligned-comma `set_config(…)` calls.
+  - `lib.php`, `classes/column_config.php`, `db/upgrade.php`:
+    removed redundant `defined('MOODLE_INTERNAL') || die();` checks
+    (`moodle.Files.MoodleInternal.MoodleInternalNotNeeded`) — all
+    three files contain only function/class declarations with no
+    top-level side effects.
+  - `db/upgrade.php`: capitalised the inline comment
+    `// col_email kept its name…` →
+    `// The col_email key kept its name…`
+    (`moodle.Commenting.InlineComment.NotCapital`).
+  - `settings.php`: removed the decorative `// -----` divider lines
+    around the CSV column-headers section heading
+    (`moodle.Commenting.InlineComment.InvalidEndChar`).
+
+### Changed
+- `version.php` bumped to `2026060806` / release `1.4.3`.
+
 ## [1.4.2] – 2026-06-08
 
 ### Fixed

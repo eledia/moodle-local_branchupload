@@ -42,9 +42,36 @@ $headers = array_values($columnconfig->all_headers());
 // a self-documenting reference for the optional fields (remove, cohorts,
 // oldemail).
 $rows = [
-    ['max.mustermann@example.de',  'GmndAchbrg', 'Bauverwaltung', 'Mustermann', 'Max',   '',  'KohorteSchulungA',                       ''],
-    ['erika.neu@example.de',       'GmndAchbrg', 'Finanzen',      'Musterfrau', 'Erika', '',  'KohorteSchulungA|KohorteSchulungB',     'erika.musterfrau@example.de'],
-    ['hans.beispiel@example.de',   'GmndAchbrg', 'Ordnungsamt',   'Beispiel',   'Hans',  '1', '',                                      ''],
+    [
+        'max.mustermann@example.de',
+        'GmndAchbrg',
+        'Bauverwaltung',
+        'Mustermann',
+        'Max',
+        '',
+        'KohorteSchulungA',
+        '',
+    ],
+    [
+        'erika.neu@example.de',
+        'GmndAchbrg',
+        'Finanzen',
+        'Musterfrau',
+        'Erika',
+        '',
+        'KohorteSchulungA|KohorteSchulungB',
+        'erika.musterfrau@example.de',
+    ],
+    [
+        'hans.beispiel@example.de',
+        'GmndAchbrg',
+        'Ordnungsamt',
+        'Beispiel',
+        'Hans',
+        '1',
+        '',
+        '',
+    ],
 ];
 
 // Release the Moodle session lock before streaming the file so concurrent
@@ -61,8 +88,8 @@ header('Pragma: no-cache');
 echo "\xEF\xBB\xBF";
 
 $out = fopen('php://output', 'w');
-fputcsv($out, $headers,   ';', '"', '\\');
+fputcsv($out, $headers, ';', '"', '\\');
 foreach ($rows as $row) {
-    fputcsv($out, $row,    ';', '"', '\\');
+    fputcsv($out, $row, ';', '"', '\\');
 }
 fclose($out);

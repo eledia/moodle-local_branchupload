@@ -21,7 +21,6 @@
  * @author     Christopher Reimann <christopher.reimann@eledia.de>
  * @copyright  2026 eLeDia GmbH, Berlin {@link https://eledia.de}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \local_branchupload\process
  */
 
 namespace local_branchupload;
@@ -31,6 +30,9 @@ use csv_import_reader;
 
 /**
  * Tests for the branch upload processing engine.
+ *
+ * @covers \local_branchupload\process
+ * @covers \local_branchupload\column_config
  */
 final class process_test extends advanced_testcase {
     /**
@@ -822,10 +824,8 @@ final class process_test extends advanced_testcase {
         $this->assertNotEmpty($previewdata['rows'][0]['errors']);
     }
 
-    // ------------------------------------------------------------------
-    // Configurable CSV column headers — added in 1.3.0,
-    // rewired in 1.4.0 to use English canonical keys + site-language defaults.
-    // ------------------------------------------------------------------
+    // Configurable CSV column headers — added in 1.3.0, rewired in 1.4.0
+    // to use English canonical keys + site-language defaults.
 
     /**
      * Test: canonical_keys() lists required keys first, optional keys last,
@@ -860,42 +860,42 @@ final class process_test extends advanced_testcase {
         // English is always available, so these assertions always run.
         $CFG->lang = 'en';
         get_string_manager()->reset_caches();
-        $this->assertSame('Email',     column_config::default_for_key('email'));
-        $this->assertSame('Branch',    column_config::default_for_key('branch'));
-        $this->assertSame('OrgUnit',   column_config::default_for_key('orgunit'));
-        $this->assertSame('LastName',  column_config::default_for_key('lastname'));
+        $this->assertSame('Email', column_config::default_for_key('email'));
+        $this->assertSame('Branch', column_config::default_for_key('branch'));
+        $this->assertSame('OrgUnit', column_config::default_for_key('orgunit'));
+        $this->assertSame('LastName', column_config::default_for_key('lastname'));
         $this->assertSame('FirstName', column_config::default_for_key('firstname'));
-        $this->assertSame('Remove',    column_config::default_for_key('remove'));
-        $this->assertSame('Cohorts',   column_config::default_for_key('cohorts'));
-        $this->assertSame('OldEmail',  column_config::default_for_key('oldemail'));
+        $this->assertSame('Remove', column_config::default_for_key('remove'));
+        $this->assertSame('Cohorts', column_config::default_for_key('cohorts'));
+        $this->assertSame('OldEmail', column_config::default_for_key('oldemail'));
 
         // German site language → the historical German defaults that existing
         // customer CSVs already use. Moodle's string manager refuses to load
         // *any* language file — including the plugin's own bundled
-        // `lang/de/local_branchupload.php` — unless the base German Moodle
-        // language pack is installed at `$CFG->langotherroot/de/langconfig.php`
-        // (see `core_string_manager_standard::populate_parent_languages()`).
+        // 'lang/de/local_branchupload.php' — unless the base German Moodle
+        // language pack is installed at $CFG->langotherroot/de/langconfig.php
+        // (see core_string_manager_standard::populate_parent_languages()).
         // That's always true on a German production site, but not necessarily
         // on CI runners that only ship English. Skip cleanly when it isn't;
-        // the bundled `lang/de/local_branchupload.php` is still covered by the
+        // the bundled 'lang/de/local_branchupload.php' is still covered by the
         // moodle-plugin-ci lang-file lint job.
         if (!get_string_manager()->translation_exists('de')) {
             $this->markTestSkipped(
                 'German Moodle language pack not installed; the string manager '
-                . 'cannot resolve `lang/de/local_branchupload.php` without it.'
+                . 'cannot resolve lang/de/local_branchupload.php without it.'
             );
         }
 
         $CFG->lang = 'de';
         get_string_manager()->reset_caches();
-        $this->assertSame('Email',                column_config::default_for_key('email'));
-        $this->assertSame('Behörde',              column_config::default_for_key('branch'));
+        $this->assertSame('Email', column_config::default_for_key('email'));
+        $this->assertSame('Behörde', column_config::default_for_key('branch'));
         $this->assertSame('Organisationseinheit', column_config::default_for_key('orgunit'));
-        $this->assertSame('Name',                 column_config::default_for_key('lastname'));
-        $this->assertSame('Vorname',              column_config::default_for_key('firstname'));
-        $this->assertSame('Löschen',              column_config::default_for_key('remove'));
-        $this->assertSame('Kohorten',             column_config::default_for_key('cohorts'));
-        $this->assertSame('Alte_Email',           column_config::default_for_key('oldemail'));
+        $this->assertSame('Name', column_config::default_for_key('lastname'));
+        $this->assertSame('Vorname', column_config::default_for_key('firstname'));
+        $this->assertSame('Löschen', column_config::default_for_key('remove'));
+        $this->assertSame('Kohorten', column_config::default_for_key('cohorts'));
+        $this->assertSame('Alte_Email', column_config::default_for_key('oldemail'));
     }
 
     /**
@@ -946,14 +946,14 @@ final class process_test extends advanced_testcase {
 
         $cc = new column_config();
 
-        $this->assertSame('Email',     $cc->header('email'));
-        $this->assertSame('Branch',    $cc->header('branch'));
-        $this->assertSame('OrgUnit',   $cc->header('orgunit'));
-        $this->assertSame('LastName',  $cc->header('lastname'));
+        $this->assertSame('Email', $cc->header('email'));
+        $this->assertSame('Branch', $cc->header('branch'));
+        $this->assertSame('OrgUnit', $cc->header('orgunit'));
+        $this->assertSame('LastName', $cc->header('lastname'));
         $this->assertSame('FirstName', $cc->header('firstname'));
-        $this->assertSame('Remove',    $cc->header('remove'));
-        $this->assertSame('Cohorts',   $cc->header('cohorts'));
-        $this->assertSame('OldEmail',  $cc->header('oldemail'));
+        $this->assertSame('Remove', $cc->header('remove'));
+        $this->assertSame('Cohorts', $cc->header('cohorts'));
+        $this->assertSame('OldEmail', $cc->header('oldemail'));
 
         $this->assertSame(
             ['email', 'branch', 'orgunit', 'lastname', 'firstname'],
@@ -973,22 +973,22 @@ final class process_test extends advanced_testcase {
         $this->resetAfterTest();
         $CFG->lang = 'en';
 
-        set_config('col_email',   'EMAIL_ADDRESS', 'local_branchupload');
-        set_config('col_branch',  'Site',          'local_branchupload');
-        set_config('col_orgunit', 'Department',    'local_branchupload');
-        set_config('col_remove',  'Delete',        'local_branchupload');
+        set_config('col_email', 'EMAIL_ADDRESS', 'local_branchupload');
+        set_config('col_branch', 'Site', 'local_branchupload');
+        set_config('col_orgunit', 'Department', 'local_branchupload');
+        set_config('col_remove', 'Delete', 'local_branchupload');
 
         $cc = new column_config();
 
         $this->assertSame('EMAIL_ADDRESS', $cc->header('email'));
-        $this->assertSame('Site',          $cc->header('branch'));
-        $this->assertSame('Department',    $cc->header('orgunit'));
-        $this->assertSame('Delete',        $cc->header('remove'));
+        $this->assertSame('Site', $cc->header('branch'));
+        $this->assertSame('Department', $cc->header('orgunit'));
+        $this->assertSame('Delete', $cc->header('remove'));
         // Untouched defaults still resolve to the site-language English defaults.
-        $this->assertSame('LastName',  $cc->header('lastname'));
+        $this->assertSame('LastName', $cc->header('lastname'));
         $this->assertSame('FirstName', $cc->header('firstname'));
-        $this->assertSame('Cohorts',   $cc->header('cohorts'));
-        $this->assertSame('OldEmail',  $cc->header('oldemail'));
+        $this->assertSame('Cohorts', $cc->header('cohorts'));
+        $this->assertSame('OldEmail', $cc->header('oldemail'));
     }
 
     /**
@@ -998,14 +998,14 @@ final class process_test extends advanced_testcase {
         $this->resetAfterTest();
 
         $cc = new column_config([
-            'email'     => 'Email',
-            'branch'    => 'Site',
-            'orgunit'   => 'Department',
-            'lastname'  => 'Surname',
+            'email' => 'Email',
+            'branch' => 'Site',
+            'orgunit' => 'Department',
+            'lastname' => 'Surname',
             'firstname' => 'GivenName',
-            'remove'    => 'Delete',
-            'cohorts'   => 'ExtraCohorts',
-            'oldemail'  => 'PreviousEmail',
+            'remove' => 'Delete',
+            'cohorts' => 'ExtraCohorts',
+            'oldemail' => 'PreviousEmail',
         ]);
 
         // CSV with weird casing and trailing spaces — must still resolve.
@@ -1077,14 +1077,14 @@ final class process_test extends advanced_testcase {
 
         // Rename every CSV column header via admin config to values that
         // are deliberately distinct from the site-language English defaults.
-        set_config('col_email',     'EmailAddress',  'local_branchupload');
-        set_config('col_branch',    'Site',          'local_branchupload');
-        set_config('col_orgunit',   'Department',    'local_branchupload');
-        set_config('col_lastname',  'Surname',       'local_branchupload');
-        set_config('col_firstname', 'GivenName',     'local_branchupload');
-        set_config('col_remove',    'Delete',        'local_branchupload');
-        set_config('col_cohorts',   'ExtraCohorts',  'local_branchupload');
-        set_config('col_oldemail',  'PreviousEmail', 'local_branchupload');
+        set_config('col_email', 'EmailAddress', 'local_branchupload');
+        set_config('col_branch', 'Site', 'local_branchupload');
+        set_config('col_orgunit', 'Department', 'local_branchupload');
+        set_config('col_lastname', 'Surname', 'local_branchupload');
+        set_config('col_firstname', 'GivenName', 'local_branchupload');
+        set_config('col_remove', 'Delete', 'local_branchupload');
+        set_config('col_cohorts', 'ExtraCohorts', 'local_branchupload');
+        set_config('col_oldemail', 'PreviousEmail', 'local_branchupload');
 
         $csv = "EmailAddress;Site;Department;Surname;GivenName;Delete;ExtraCohorts;PreviousEmail\n"
              . "custom@example.de;GmndAchbrg;Finance;Doe;Jane;;TrainingA;";
@@ -1092,7 +1092,7 @@ final class process_test extends advanced_testcase {
         $reader = $this->create_csv_reader($csv);
         $processor = new process($reader['cir'], $reader['columns']);
 
-        // validate_columns must accept the renamed headers.
+        // The validate_columns() call must accept the renamed headers.
         $this->assertSame([], $processor->validate_columns());
 
         $results = $processor->execute();
@@ -1102,11 +1102,11 @@ final class process_test extends advanced_testcase {
         $user = $DB->get_record('user', ['username' => 'custom@example.de']);
         $this->assertNotFalse($user);
         $this->assertSame('Jane', $user->firstname);
-        $this->assertSame('Doe',  $user->lastname);
+        $this->assertSame('Doe', $user->lastname);
 
         $profile = profile_user_record($user->id, false);
         $this->assertSame('GmndAchbrg', $profile->branchoffice);
-        $this->assertSame('Finance',    $profile->orgunit);
+        $this->assertSame('Finance', $profile->orgunit);
 
         // Branch + extra cohort memberships are both honoured.
         $this->assertTrue(cohort_is_member(
@@ -1134,7 +1134,7 @@ final class process_test extends advanced_testcase {
         // Rename Branch → Site and OrgUnit → Department. Both targets are
         // deliberately disjoint from the English defaults so the
         // "not in error message" assertion below is unambiguous.
-        set_config('col_branch',  'Site',       'local_branchupload');
+        set_config('col_branch', 'Site', 'local_branchupload');
         set_config('col_orgunit', 'Department', 'local_branchupload');
 
         // CSV still uses the default English headers — must now be rejected.
@@ -1148,10 +1148,10 @@ final class process_test extends advanced_testcase {
 
         $this->assertNotEmpty($errors);
         // The error message tells the admin exactly which new header names to use.
-        $this->assertStringContainsString('Site',       $errors[0]);
+        $this->assertStringContainsString('Site', $errors[0]);
         $this->assertStringContainsString('Department', $errors[0]);
         // And it does NOT mention the now-renamed default English names as missing.
-        $this->assertStringNotContainsString('Branch',  $errors[0]);
+        $this->assertStringNotContainsString('Branch', $errors[0]);
         $this->assertStringNotContainsString('OrgUnit', $errors[0]);
     }
 
@@ -1165,8 +1165,8 @@ final class process_test extends advanced_testcase {
         $CFG->lang = 'en';
 
         $this->setup_plugin_config();
-        set_config('col_email',  'EmailAddress', 'local_branchupload');
-        set_config('col_branch', 'Site',         'local_branchupload');
+        set_config('col_email', 'EmailAddress', 'local_branchupload');
+        set_config('col_branch', 'Site', 'local_branchupload');
 
         $reader = $this->create_csv_reader("EmailAddress;Site;OrgUnit;LastName;FirstName\n");
         $processor = new process($reader['cir'], $reader['columns']);
@@ -1174,12 +1174,12 @@ final class process_test extends advanced_testcase {
         $headers = $processor->get_column_headers();
 
         $this->assertSame('EmailAddress', $headers['email']);
-        $this->assertSame('Site',         $headers['branch']);
-        $this->assertSame('OrgUnit',      $headers['orgunit']);
-        $this->assertSame('LastName',     $headers['lastname']);
-        $this->assertSame('FirstName',    $headers['firstname']);
-        $this->assertSame('Remove',       $headers['remove']);
-        $this->assertSame('Cohorts',      $headers['cohorts']);
-        $this->assertSame('OldEmail',     $headers['oldemail']);
+        $this->assertSame('Site', $headers['branch']);
+        $this->assertSame('OrgUnit', $headers['orgunit']);
+        $this->assertSame('LastName', $headers['lastname']);
+        $this->assertSame('FirstName', $headers['firstname']);
+        $this->assertSame('Remove', $headers['remove']);
+        $this->assertSame('Cohorts', $headers['cohorts']);
+        $this->assertSame('OldEmail', $headers['oldemail']);
     }
 }

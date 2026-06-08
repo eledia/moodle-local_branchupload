@@ -44,7 +44,6 @@ require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
  * Custom Behat steps for the branch-office user-upload plugin.
  */
 class behat_local_branchupload extends behat_base {
-
     /**
      * Set up the two custom user profile fields, configure the plugin,
      * create a "branchmanager" role and grant it the upload capability.
@@ -103,11 +102,11 @@ class behat_local_branchupload extends behat_base {
         ]);
 
         // 4. Plugin configuration.
-        set_config('branchfield',         'branchoffice', 'local_branchupload');
-        set_config('orgunitfield',        'orgunit',      'local_branchupload');
-        set_config('autocreate_cohorts',  0,              'local_branchupload');
-        set_config('deleteaction',        'suspend',      'local_branchupload');
-        set_config('maxusers',            0,              'local_branchupload');
+        set_config('branchfield', 'branchoffice', 'local_branchupload');
+        set_config('orgunitfield', 'orgunit', 'local_branchupload');
+        set_config('autocreate_cohorts', 0, 'local_branchupload');
+        set_config('deleteaction', 'suspend', 'local_branchupload');
+        set_config('maxusers', 0, 'local_branchupload');
 
         // 5. Branch-manager role + capability grant.
         $roleid = create_role(

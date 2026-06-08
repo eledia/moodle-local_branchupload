@@ -94,11 +94,9 @@ if ($hassiteconfig) {
         PARAM_INT
     ));
 
-    // ----------------------------------------------------------------
     // CSV column headers — every header can be renamed to match the
     // uploaded file. Empty values fall back to the site-language default
     // resolved via column_config::default_for_key().
-    // ----------------------------------------------------------------
     $settings->add(new admin_setting_heading(
         'local_branchupload/columns_heading',
         get_string('setting_columns_heading', 'local_branchupload'),
